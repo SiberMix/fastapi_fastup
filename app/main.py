@@ -1,10 +1,6 @@
-import sqlalchemy
 from fastapi import FastAPI, Depends, APIRouter
-from fastapi.staticfiles import StaticFiles
-
 from fastapi_utils.cbv import cbv
 from sqlalchemy.orm import Session
-
 from app.config import settings
 from app.config.database import get_db_session
 
@@ -13,7 +9,6 @@ api = APIRouter()
 
 @cbv(api)
 class APIRoutes:
-    # example of injected db session
     db: Session = Depends(get_db_session)
 
     @api.get("/")

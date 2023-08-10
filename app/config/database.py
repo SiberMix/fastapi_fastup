@@ -7,8 +7,6 @@ from dotenv import load_dotenv
 
 from app.config.settings import db_user, db_password, db_host, db_port, db_name
 
-load_dotenv()
-
 engine = create_engine(
     f"postgresql+psycopg2://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
 )

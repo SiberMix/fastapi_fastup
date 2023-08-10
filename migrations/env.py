@@ -8,6 +8,7 @@ sys.path.append(os.path.join(sys.path[0], "app"))
 
 from app.config.database import metadata
 from app.config.settings import db_host, db_port, db_name, db_user, db_password
+from app.models import *
 
 
 

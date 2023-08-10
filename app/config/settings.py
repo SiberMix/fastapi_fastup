@@ -1,9 +1,12 @@
 import os
 import pathlib
 
-# Application
+from dotenv import load_dotenv
 
-APP_NAME = "My App"
+load_dotenv()
+# Application
+DEBUG = True
+APP_NAME = "TIZA PRODUCTION" if DEBUG == False else "TIZA TEST"
 APP_ROOT = pathlib.Path(__file__).parent
 API_V1_STR = "/api/v1"
 
