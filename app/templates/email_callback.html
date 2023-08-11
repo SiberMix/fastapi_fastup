@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background-color: #3498db;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .footer {
+            background-color: #f2f2f2;
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Заказ обратного звонка</h1>
+        </div>
+        <div class="content">
+            <p>Потенциальный клиент оставил заявку на обратный звонок. Данные для связи</p>
+            <p><strong>Контактное лицо:</strong> {{ name }}</p>
+            <p><strong>Номер телефона:</strong> {{ phone }}</p>
+            <p><strong>Почта:</strong> {{ email }}</p>
+            <p><strong>Город откуда:</strong> {{ city_from }}</p>
+            <p><strong>Город куда:</strong> {{ city_to }}</p>
+            <p><strong>Вес</strong> {{ weight }}</p>
+            <p><strong>Объем</strong> {{ volume }}</p>
+            <p><strong>Количество</strong> {{ place }}</p>
+        </div>
+        <div class="footer">
+            <p>Вы получили это письмо, так как указаны в списке сотрудников рассылки</p>
+        </div>
+    </div>
+</body>
+</html>

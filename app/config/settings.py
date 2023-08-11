@@ -2,13 +2,24 @@ import os
 import pathlib
 
 from dotenv import load_dotenv
+from jinja2 import Environment, FileSystemLoader
 
 load_dotenv()
-# Application
+TEMPLATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../templates")
+
+env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
+
+
+# Debug mode
 DEBUG = True
+
+# Application
 APP_NAME = "TIZA PRODUCTION" if DEBUG == False else "TIZA TEST"
 APP_ROOT = pathlib.Path(__file__).parent
 API_V1_STR = "/api/v1"
+
+admin_login = os.environ.get("ADMIN_LOGIN")
+admin_password = os.environ.get("ADMIN_PASSWORD")
 
 # Database
 

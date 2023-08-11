@@ -1,6 +1,5 @@
 from sqlalchemy import Column, Integer, String
 
-
 from app.config.database import Base
 
 
@@ -12,4 +11,3 @@ class EmailModel(Base):
     __tablename__ = "Callbacks"
     id = Column(Integer, primary_key=True)
     email_login = Column(String(255), nullable=False)
-    result_calculated = Column(String(255), nullable=True)

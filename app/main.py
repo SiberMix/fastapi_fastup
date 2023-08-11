@@ -1,29 +1,22 @@
-from fastapi import FastAPI, Depends, APIRouter
-from fastapi_utils.cbv import cbv
-from sqlalchemy.orm import Session
+from fastapi import FastAPI
+from sqladmin import Admin
+
+from app.admin.admin_config import configure_admin
 from app.config import settings
-from app.config.database import get_db_session
-
-api = APIRouter()
-
-
-@cbv(api)
-class APIRoutes:
-    db: Session = Depends(get_db_session)
-
-    @api.get("/")
-    def index(self):
-        return {"success": True}
+from app.config.database import engine
+from app.config.router_config import configure_routes
 
 
 def create_app():
+    """
+    Создаем приложение"""
     app = FastAPI(
-        title=settings.APP_NAME, 
-        openapi_url=f"{settings.API_V1_STR}/openapi.json"
+        title=settings.APP_NAME, openapi_url=f"{settings.API_V1_STR}/openapi.json"
     )
-    @app.get('/')
-    def start():
-        return {'ok': True}
-    app.include_router(api, prefix="/api")
 
+    configure_routes(app)
+    configure_admin(app, engine)
     return app
+
+
+app = create_app()

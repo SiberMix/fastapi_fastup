@@ -1,11 +1,12 @@
 from contextlib import contextmanager
 from typing import Callable
-from sqlalchemy import create_engine, MetaData
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
-from dotenv import load_dotenv
 
-from app.config.settings import db_user, db_password, db_host, db_port, db_name
+from dotenv import load_dotenv
+from sqlalchemy import MetaData, create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+
+from app.config.settings import db_host, db_name, db_password, db_port, db_user
 
 engine = create_engine(
     f"postgresql+psycopg2://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
@@ -19,8 +20,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 def get_db_session():
-    """Starts a database session as a context manager.
-    """
+    """Starts a database session as a context manager."""
     session = SessionLocal()
     try:
         yield session
