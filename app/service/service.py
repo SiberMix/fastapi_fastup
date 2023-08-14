@@ -55,20 +55,20 @@ class Callback:
     """
     email_api = SenderEmail()
 
-    def send_to_email(self, to_send, ticket):
+    def send_to_email(self, to_send, name, phone, email, city_from, city_to, weight, volume, place):
         """
         Отправить callback на почту
         """
         template = env.get_template("email_callback.html")
         text = template.render(
-            name=ticket.name,
-            phone=ticket.phone,
-            email=ticket.email,
-            city_from=ticket.city_from,
-            city_to=ticket.city_to,
-            weight=ticket.weight,
-            volume=ticket.volume,
-            place=ticket.place
+            name=name,
+            phone=phone,
+            email=email,
+            city_from=city_from,
+            city_to=city_to,
+            weight=weight,
+            volume=volume,
+            place=place
         )
         result = self.email_api.send_email_yandex(to=to_send, text=text, title="Тиза-Логистика: Заказ обратного звонка с сайта ТИЗА")
         return result

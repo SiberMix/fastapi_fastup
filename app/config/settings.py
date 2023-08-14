@@ -9,12 +9,8 @@ TEMPLATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../temp
 
 env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
 
-
-# Debug mode
-DEBUG = True
-
 # Application
-APP_NAME = "TIZA PRODUCTION" if DEBUG == False else "TIZA TEST"
+APP_NAME = "TIZA" + " " + os.environ.get("DEBUG")
 APP_ROOT = pathlib.Path(__file__).parent
 API_V1_STR = "/api/v1"
 

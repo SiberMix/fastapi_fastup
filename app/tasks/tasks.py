@@ -4,13 +4,13 @@ from app.tasks.celery_config import tisa_celery
 callback_api = Callback()
 
 @tisa_celery.task
-def send_email_callback(send_to, ticket):
+def send_email_callback(send_to, name, phone, email, city_from, city_to, weight, volume, place):
     """
     Кидаем задачу в Celery на отправку письма всем пользователям из БД
     :return:
     """
+    callback_api.send_to_email(send_to, name, phone, email, city_from, city_to, weight, volume, place)
 
-    callback_api.send_to_email(to_send=send_to, ticket=ticket)
     return send_to
 
 @tisa_celery.task
