@@ -140,7 +140,6 @@ dmypy.json
 .pytype/
 Pipfile
 Pipfile.lock
-README.md
 celerybeat-schedule.db
 docs/
 
