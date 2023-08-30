@@ -30,3 +30,6 @@ db_port = os.environ.get("DB_PORT")
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 DEBUG_ADMIN = os.environ.get("DEBUG_ADMIN", False)
+
+#BTK
+link_lk_btk = os.environ.get("BTK_LINK")
