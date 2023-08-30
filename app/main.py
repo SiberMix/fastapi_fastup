@@ -12,11 +12,13 @@ from app.admin.admin_config import configure_admin
 from app.config import settings
 from app.config.database import engine
 from app.config.router_config import configure_routes
+from app.routers.qr_tease import router_system as qr_route
 
 load_dotenv()
 log_integration = LoggingIntegration(level=logging.INFO, event_level=logging.ERROR)
 
 sentry_sdk.init(dsn=os.getenv("SENTRY_LINK"), traces_sample_rate=1.0, integrations=[log_integration])
+
 
 def create_app():
     """
@@ -38,3 +40,5 @@ def create_app():
 
 
 app = create_app()
+qr_tease = FastAPI()
+qr_tease.include_router(qr_route)

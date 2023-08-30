@@ -33,3 +33,4 @@ DEBUG_ADMIN = os.environ.get("DEBUG_ADMIN", False)
 
 #BTK
 link_lk_btk = os.environ.get("BTK_LINK")
+qr_link_1c = os.environ.get("QR_LINK_1C")
