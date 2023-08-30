@@ -5,8 +5,8 @@ class BodyCallback(BaseModel):
     name: str
     phone: str
     email: EmailStr
-    city_from: str
-    city_to: str
+    city_from: str = ''
+    city_to: str = ''
     weight: float
     volume: float
     place: int

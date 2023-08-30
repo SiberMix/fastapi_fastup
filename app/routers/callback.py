@@ -1,20 +1,29 @@
+import os
+
+from dotenv import load_dotenv
 from fastapi import APIRouter, Depends
 
 # Определите основной API-роутер
+from sentry_sdk import capture_message
 from sqlalchemy.orm import Session
 
 from app.config.database import get_db_session
 from app.models import EmailModel
 from app.schemas.callback import BodyCallback
+from app.service.telegram_sender import TelegramBot
 from app.tasks.tasks import send_email_callback, send_email_user
 
+load_dotenv()
 router_callback = APIRouter()
 
+
+telegram_bot = TelegramBot(bot_token=os.getenv('BOT_TOKEN'))
 @router_callback.post("/callback")
-def post_callback(ticket: BodyCallback, db: Session = Depends(get_db_session)):
+async def post_callback(ticket: BodyCallback, db: Session = Depends(get_db_session)):
     """
     Отправить обратный звонок
     """
+
     query = db.query(EmailModel).all()
     mission_list = []
     for item in query:
@@ -31,4 +40,8 @@ def post_callback(ticket: BodyCallback, db: Session = Depends(get_db_session)):
         )
         mission_list.append(item.email_login)
     send_email_user.delay(send_to=ticket.email)
+    message = f'ТИЗА: Заявка с сайта: \n Телефон: {ticket.phone} \n Почта: {ticket.email} \n Откуда: {ticket.city_from} \n Куда: {ticket.city_to} \n Вес: {ticket.weight} \n Объем: {ticket.volume}'
+    await telegram_bot.send_message(chat_id=os.getenv('CHAT_ID'), message_text=message)
+    capture_message(message)
+
     return mission_list

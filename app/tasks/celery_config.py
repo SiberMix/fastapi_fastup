@@ -13,7 +13,7 @@ tisa_celery.conf.broker_connection_retry_on_startup = True
 tisa_celery.autodiscover_tasks(['app.tasks'])
 
 
-# Создайте класс-обёртку для удобства добавления задач
+
 class CeleryTaskQueue:
     def __init__(self, app):
         self.app = app
