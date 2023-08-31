@@ -1,4 +1,5 @@
 import json
+import os
 from base64 import b64decode
 
 import requests
@@ -6,20 +7,20 @@ from fastapi import APIRouter
 from starlette.requests import Request
 
 from app.config.settings import qr_link_1c
+from app.routers.callback import telegram_bot
 
 router_system = APIRouter()
 
 
-def one_c_redirect(message: str) -> int:
+async def one_c_redirect(message: str) -> int:
     try:
         r = requests.post(url=qr_link_1c, json=json.loads(message))
-
-        # Отправка в телегу об чеке
+        await telegram_bot.send_message(chat_id=os.getenv('CHAT_ID'), message_text=message)
         if r.status_code in [201]:
             return 200
         return r.status_code
-    except requests.ConnectionError:
-        # Отправка в телегу об ошибке чека
+    except requests.ConnectionError as e:
+        await telegram_bot.send_message(chat_id=os.getenv('CHAT_ID'), message_text=e)
         return 418
 
 
@@ -38,6 +39,7 @@ async def post_info(request: Request):
     :return:
     """
     body = await request.body()
+
     message = take_message(body)
 
     result = one_c_redirect(message)
