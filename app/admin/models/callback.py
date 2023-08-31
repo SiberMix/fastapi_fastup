@@ -1,7 +1,6 @@
 from sqladmin import ModelView
 from app.models.email_callback import EmailModel
 
-
 class EmailForSend(ModelView, model=EmailModel):
     """
     Список почт, куда отправлять обратный звонок
