@@ -1,4 +1,6 @@
 from sqladmin import ModelView
+
+from app.models import HistoryTicket
 from app.models.email_callback import EmailModel
 
 class EmailForSend(ModelView, model=EmailModel):
@@ -10,3 +12,4 @@ class EmailForSend(ModelView, model=EmailModel):
     name_plural = "Почты обратного звонка"
     icon = "fa-solid fa-envelope"
     column_list = [EmailModel.email_login]
+
