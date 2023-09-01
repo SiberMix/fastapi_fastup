@@ -70,7 +70,7 @@ class Callback:
             volume=volume,
             place=place
         )
-        result = self.email_api.send_email_yandex(to=to_send, text=text, title="Тиза-Логистика: Заказ обратного звонка с сайта ТИЗА")
+        result = self.email_api.send_email_yandex(to=to_send, text=text, title="Тиза-Логистик: Заказ обратного звонка с сайта ТИЗА")
         return result
     def send_info_client(self, to_send):
         """
@@ -78,5 +78,5 @@ class Callback:
         """
         template = env.get_template("email_send_client.html")
         text = template.render()
-        result = self.email_api.send_email_yandex(to=to_send, text=text, title="Тиза-Логистика: Вы заказали обратный звонок")
+        result = self.email_api.send_email_yandex(to=to_send, text=text, title="Тиза-Логистик: Вы заказали обратный звонок")
         return result
