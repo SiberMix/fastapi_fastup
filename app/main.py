@@ -40,5 +40,5 @@ def create_app():
 
 
 app = create_app()
-qr_tease = FastAPI()
-qr_tease.include_router(qr_route)
+qr_app = FastAPI()
+qr_app.include_router(qr_route)
