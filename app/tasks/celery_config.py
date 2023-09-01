@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 tisa_celery = Celery()
 tisa_celery.conf.broker_url = (
-    f"redis://{os.getenv('REDIS_HOST')}:{os.getenv('REDIS_PORT')}/9"
+    f"redis://{os.getenv('REDIS_HOST')}:{os.getenv('REDIS_PORT')}/{os.getenv('REDIS_DB')}"
 )
 
 tisa_celery.conf.broker_connection_retry_on_startup = True

@@ -12,7 +12,7 @@ def send_email_callback(send_to, name, phone, email, city_from, city_to, weight,
     callback_api.send_to_email(send_to, name, phone, email, city_from, city_to, weight, volume, place)
 
     return send_to
-1
+
 @tisa_celery.task
 def send_email_user(send_to):
     """
