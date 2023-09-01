@@ -38,19 +38,7 @@ async def post_callback(ticket: BodyCallback, db: Session = Depends(get_db_sessi
             volume=ticket.volume,
             place=ticket.place
         )
-        history_ticket = HistoryTicket(
-            send_to=item.email_login,
-            name=ticket.name,
-            phone=ticket.phone,
-            email=ticket.email,
-            city_from=ticket.city_from,
-            city_to=ticket.city_to,
-            weight=ticket.weight,
-            volume=ticket.volume,
-            place=ticket.place
-        )
-        db.add(history_ticket)
-        db.commit()
+
         mission_list.append(item.email_login)
     send_email_user.delay(send_to=ticket.email)
     message = f'Заявка с сайта: \n ' \
@@ -62,6 +50,19 @@ async def post_callback(ticket: BodyCallback, db: Session = Depends(get_db_sessi
               f'Объем: {ticket.volume} \n' \
               f'Имя: {ticket.name} \n' \
               f'Мест: {ticket.place} \n'
+    history_ticket = HistoryTicket(
+        send_to=ticket.email,
+        name=ticket.name,
+        phone=ticket.phone,
+        email=ticket.email,
+        city_from=ticket.city_from,
+        city_to=ticket.city_to,
+        weight=ticket.weight,
+        volume=ticket.volume,
+        place=ticket.place
+    )
+    db.add(history_ticket)
+    db.commit()
     telegram_bot.send_message(chat_id=os.getenv('CHAT_ID'), message=message)
     capture_message(message)
 
