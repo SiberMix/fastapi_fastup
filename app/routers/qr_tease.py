@@ -1,32 +1,46 @@
 import json
 import os
-from base64 import b64decode
-
 import requests
-from fastapi import APIRouter
+from base64 import b64decode
+from fastapi import APIRouter, Depends
 from starlette.requests import Request
-
 from app.config.settings import qr_link_1c
-from app.routers.callback import telegram_bot
 from app.service.telegram_sender import TelegramBot
 
 router_system = APIRouter()
+telegram_bot = TelegramBot(os.getenv("BOT_TOKEN"))
 
+class OneCResponseCode:
+    SUCCESS = 201
+    CONNECTION_ERROR = 418
+    OTHER_ERROR = 500
 
-telegram = TelegramBot(os.getenv("BOT_TOKEN"))
+def parse_message(body):
+    return json.loads(body).get('qrcId'), round(json.loads(body).get('amount') / 100, 2)
+
+def make_message(body, status):
+    status_icons = {'success': '✅', 'error': '❌'}
+    status_messages = {
+        OneCResponseCode.SUCCESS: 'Обработан callback',
+        OneCResponseCode.CONNECTION_ERROR: 'Не удалось установить соединение с 1С',
+        OneCResponseCode.OTHER_ERROR: 'Необработан callback'
+    }
+    operation_icon = status_icons.get('success') if status == OneCResponseCode.SUCCESS else status_icons.get('error')
+    operation_status = status_messages.get(status, 'Необработан callback')
+
+    operation_id, operation_amount = parse_message(body)
+    friendly_message = f'{operation_icon}[{status}] {operation_status}: {operation_id}, на сумму {operation_amount}'
+    return friendly_message
+
 def one_c_redirect(message: str) -> int:
     try:
         r = requests.post(url=qr_link_1c, json=json.loads(message))
-
-        if r.status_code in [201]:
-            telegram_bot.send_message(os.getenv("CHAT_ID"), 'Успешно отработан чек')
-
-            return 200
-        return r.status_code
+        msg = make_message(message, r.status_code)
+        telegram_bot.send_message(os.getenv("CHAT_ID"), msg)
+        return OneCResponseCode.SUCCESS
     except requests.ConnectionError as e:
-        telegram_bot.send_message(os.getenv("CHAT_ID"), e)
-        return 418
-
+        telegram_bot.send_message(os.getenv("CHAT_ID"), str(e))
+        return OneCResponseCode.CONNECTION_ERROR
 
 def take_message(data: bytes) -> str:
     base64_bytes = data.split(b'.')[1]
@@ -35,16 +49,16 @@ def take_message(data: bytes) -> str:
     message = message_bytes.decode('utf-8')
     return message
 
+async def get_body(request: Request):
+    result = await request.body()
+    return result
 
 @router_system.post('/')
-def post_info(request: Request):
+def post_info(body: bytes = Depends(get_body)):
     """
     Отправить ответ на 1с и получить итог
     :return:
     """
-    body = request.body()
-
     message = take_message(body)
-
     result = one_c_redirect(message)
     return result
