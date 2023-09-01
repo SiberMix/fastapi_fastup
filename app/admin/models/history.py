@@ -3,7 +3,7 @@ from sqladmin import ModelView
 from app.models import HistoryTicket
 
 
-class HistotyTicket(ModelView, model=HistoryTicket):
+class HistorTicket(ModelView, model=HistoryTicket):
     """
     Список почт, куда отправлять обратный звонок
     """
@@ -21,3 +21,5 @@ class HistotyTicket(ModelView, model=HistoryTicket):
                    HistoryTicket.volume,
                    HistoryTicket.place]
 
+    can_edit = False     # Отключение возможности редактирования
+    can_delete = False   # Отключение возможности удаления
