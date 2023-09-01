@@ -53,7 +53,7 @@ async def post_callback(ticket: BodyCallback, db: Session = Depends(get_db_sessi
         mission_list.append(item.email_login)
     send_email_user.delay(send_to=ticket.email)
     message = f'Заявка с сайта: \n Телефон: {ticket.phone} \n Почта: {ticket.email} \n Откуда: {ticket.city_from} \n Куда: {ticket.city_to} \n Вес: {ticket.weight} \n Объем: {ticket.volume}'
-    await telegram_bot.send_message(chat_id=os.getenv('CHAT_ID'), message=message)
+    telegram_bot.send_message(chat_id=os.getenv('CHAT_ID'), message=message)
     capture_message(message)
 
     return mission_list
