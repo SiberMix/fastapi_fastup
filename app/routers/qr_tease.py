@@ -2,6 +2,8 @@ import json
 import os
 import requests
 from base64 import b64decode
+
+import sentry_sdk
 from fastapi import APIRouter, Depends
 from starlette.requests import Request
 from app.config.settings import qr_link_1c
@@ -36,6 +38,10 @@ def one_c_redirect(message: str) -> int:
     try:
         r = requests.post(url=qr_link_1c, json=json.loads(message))
         msg = make_message(message, r.status_code)
+        with sentry_sdk.configure_scope() as scope:
+            scope.set_context("Info", {'details': f'"{msg.split(": ")[1]}"'})
+        sentry_sdk.capture_message(msg.split(': ')[0][1:])
+
         telegram_bot.send_message(os.getenv("CHAT_ID"), msg)
         return OneCResponseCode.SUCCESS
     except requests.ConnectionError as e:
