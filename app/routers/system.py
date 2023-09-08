@@ -18,7 +18,7 @@ def ping():
 
 @router_system.get("/")
 def redirect_redoc():
-    return RedirectResponse(url="/redoc")
+    return RedirectResponse(url="/docs")
 
 @router_system.get("/getCoords")
 def get_coords():

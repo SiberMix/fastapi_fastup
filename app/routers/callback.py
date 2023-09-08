@@ -47,9 +47,9 @@ async def post_callback(ticket: BodyCallback, db: Session = Depends(get_db_sessi
               f'Откуда: {ticket.city_from} \n ' \
               f'Куда: {ticket.city_to} \n ' \
               f'Вес: {ticket.weight} \n ' \
-              f'Объем: {ticket.volume} \n' \
-              f'Имя: {ticket.name} \n' \
-              f'Мест: {ticket.place} \n'
+              f'Объем: {ticket.volume} \n ' \
+              f'Имя: {ticket.name} \n ' \
+              f'Мест: {ticket.place} \n '
     history_ticket = HistoryTicket(
         send_to=ticket.email,
         name=ticket.name,
