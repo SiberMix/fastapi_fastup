@@ -3,7 +3,8 @@ import os
 
 import sentry_sdk
 from dotenv import load_dotenv
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from sentry_sdk.integrations.logging import LoggingIntegration
 from sqladmin import Admin
 from starlette.middleware.cors import CORSMiddleware
@@ -12,7 +13,9 @@ from app.admin.admin_config import configure_admin
 from app.config import settings
 from app.config.database import engine
 from app.config.router_config import configure_routes
+from app.routers.logs import authenticate_user
 from app.routers.qr_tease import router_system as qr_route
+from app.schemas.auth import UserCredentials
 
 load_dotenv()
 log_integration = LoggingIntegration(level=logging.INFO, event_level=logging.ERROR)
@@ -26,6 +29,7 @@ def create_app():
     app = FastAPI(
         title=settings.APP_NAME, openapi_url=f"{settings.API_V1_STR}/openapi.json"
     )
+
     # Включаем CORS middleware
     app.add_middleware(
         CORSMiddleware,

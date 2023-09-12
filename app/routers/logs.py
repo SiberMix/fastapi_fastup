@@ -1,11 +1,21 @@
-from fastapi import APIRouter, Depends
+from typing import Annotated
+
+from fastapi import APIRouter, Depends, HTTPException
+from fastapi.security import HTTPBasicCredentials, HTTPBasic
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.config.database import get_db_session
+from app.config.settings import login_logs, password_logs
 from app.models import HistoryTicket
 
 router = APIRouter()
+security_link = HTTPBasic()
+
+def authenticate_user(credentials: HTTPBasicCredentials = Depends(security_link)):
+    if credentials.username == login_logs and credentials.password == password_logs:
+        return True
+    raise HTTPException(status_code=401)
 
 # Получить максимальное количество мест (place) в заявках
 @router.get("/api/max_places")
@@ -13,6 +23,7 @@ def max_places(db: Session = Depends(get_db_session)):
     """
     Получить максимальное количество мест (place) в заявках
     """
+
     max_place = db.query(HistoryTicket).with_entities(HistoryTicket.place).order_by(HistoryTicket.place.desc()).first()
     return {"max_places": max_place[0] if max_place else 0}
 
@@ -35,10 +46,12 @@ def max_weight(db: Session = Depends(get_db_session)):
 
 # Получить количество заявок из конкретного города
 @router.get("/api/requests_from_city")
-def requests_from_city(city: str, db: Session = Depends(get_db_session)):
+def requests_from_city(city: str,
+                       db: Session = Depends(get_db_session)):
     """
     Получить количество заявок из конкретного города
     """
+
     count = db.query(HistoryTicket).filter(HistoryTicket.city_from == city).count()
     return {"requests_from_city": count if count else 0}
 

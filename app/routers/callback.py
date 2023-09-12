@@ -67,3 +67,5 @@ async def post_callback(ticket: BodyCallback, db: Session = Depends(get_db_sessi
     capture_message(message)
 
     return mission_list
+
+
